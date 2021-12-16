@@ -1,4 +1,7 @@
 import React from 'react'
+
+import  SideBarChat from './SideBarChat';
+
 import { Avatar, IconButton} from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'; 
 import ChatIcon from '@mui/icons-material/Chat'; 
@@ -33,7 +36,10 @@ const SideBar = () => {
           
       </div>
       <div className = "sideBarChats">
-          
+        <SideBarChat  addNewChat/>
+        <SideBarChat/>
+        <SideBarChat/>
+        <SideBarChat/>
       </div>
       <div></div>
     </div>
