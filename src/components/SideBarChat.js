@@ -6,7 +6,7 @@ import './SideBarChat.css'
 const SideBarChat = ({addNewChat}) => {
 
   const createChat = () => {
-
+    const roomName = prompt("please enter name for chat")
   }
   return !addNewChat ? (
     <div className = "sideBarChat">
