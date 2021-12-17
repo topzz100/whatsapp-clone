@@ -1,4 +1,7 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import firebase from 'firebase/compat'
+import 'firebase/firestore'
+
 const firebaseConfig = {
   apiKey: "AIzaSyDnDh2tJMKOV3hFVQ7WV49ZcHL1WCWtiIg",
   authDomain: "whatsapp-clone-bb6a8.firebaseapp.com",
