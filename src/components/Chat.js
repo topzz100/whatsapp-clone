@@ -1,10 +1,22 @@
 import { AttachFile, InsertEmoticon, Mic, MoreVert, SearchOutlined } from '@mui/icons-material'
 import { Avatar, IconButton } from '@mui/material'
-import React, {useState} from'react'
+import React, {useState, useEffect} from'react'
 import './Chat.css'
+import { useParams } from 'react-router-dom'
+import db from '../firebase'
 
 const Chat = () => {
   const[state, setState] = useState('')
+  const {roomId} = useParams()
+  const[roomName, setroomName] = useState('')
+
+  useEffect(() => {
+    if(roomId){
+      db.collection('rooms').doc(roomId).onSnapshot(snapshot => {
+        setroomName(snapshot.data().name)
+      })
+    }
+  },[roomId])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -16,7 +28,7 @@ const Chat = () => {
     <div className="chat-header">
       <Avatar/>
       <div className="chat-header-info">
-        <h3>Room name</h3>
+        <h3>{roomName}</h3>
         <p>Last seen as...</p>
       </div>
 
