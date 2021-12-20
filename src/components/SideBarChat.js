@@ -16,7 +16,7 @@ const SideBarChat = ({id, name, addNewChat}) => {
         ))
       })
     }
-  })
+  },[id])
 
   const createChat = () => {
     const roomName = prompt("please enter name for chat room")
