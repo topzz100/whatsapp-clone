@@ -1,11 +1,22 @@
 import { Avatar } from '@mui/material';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import db from '../firebase'
 
 import './SideBarChat.css'
 
 const SideBarChat = ({id, name, addNewChat}) => {
+   const [messages, setMessages] = useState('')
+
+  useEffect(() => {
+    if(id){
+      db.collection('rooms').doc(id).collection('messages').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+        setMessages(snapshot.docs.map((doc) => 
+          doc.data()
+        ))
+      })
+    }
+  })
 
   const createChat = () => {
     const roomName = prompt("please enter name for chat room")
@@ -21,7 +32,7 @@ const SideBarChat = ({id, name, addNewChat}) => {
       <Avatar/>
       <div className="sideBarChat-info">
         <h2>{name}</h2>
-        <p>last message...</p>
+        <p>{messages[0]?.message}</p>
       </div>
     </div>
     </Link>

@@ -43,7 +43,9 @@ const Chat = () => {
       <Avatar/>
       <div className="chat-header-info">
         <h3>{roomName}</h3>
-        <p>Last seen as...</p>
+        <p>last seen {new Date(
+          messages[messages.length-1]?.timestamp?.toDate()
+        ).toUTCString()}</p>
       </div>
 
       <div className="chat-header-right">
