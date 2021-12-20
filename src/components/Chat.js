@@ -1,19 +1,27 @@
-import { AttachFile, InsertEmoticon, Mic, MoreVert, SearchOutlined } from '@mui/icons-material'
+import { AttachFile, InsertEmoticon, MessageSharp, Mic, MoreVert, SearchOutlined } from '@mui/icons-material'
 import { Avatar, IconButton } from '@mui/material'
 import React, {useState, useEffect} from'react'
 import './Chat.css'
 import { useParams } from 'react-router-dom'
 import db from '../firebase'
+import { useStateValue } from './AppProvider'
+import firebase from 'firebase/compat'
 
 const Chat = () => {
   const[state, setState] = useState('')
   const {roomId} = useParams()
   const[roomName, setroomName] = useState('')
+  const[messages, setMessages] = useState([])
+  const [{user}, dispatch] = useStateValue()
 
   useEffect(() => {
     if(roomId){
       db.collection('rooms').doc(roomId).onSnapshot(snapshot => {
-        setroomName(snapshot.data().name)
+        setroomName(snapshot.data().name);
+
+        db.collection('rooms').doc(roomId).collection('messages').orderBy('timestamp', 'asc').onSnapshot(snapshot => (
+          setMessages(snapshot.docs.map((doc) => doc.data()))
+        ))
       })
     }
   },[roomId])
@@ -21,6 +29,12 @@ const Chat = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(state)
+
+    db.collection('rooms').doc(roomId).collection('messages').add({
+      message: state,
+      name: user.displayName,
+      timestamp:firebase.firestore.FieldValue.serverTimestamp()
+    })
     setState('')
   }
 
@@ -45,16 +59,21 @@ const Chat = () => {
       </div>
     </div>
     <div className="chat-body">
-      <div className = "message">
+      {messages.map((message) => {
+       return  (<div className = {`message ${message.name === user.displayName && 'receiver'}`}>
+        <h4 className="name">{message.name}</h4>
+        <p>{message.message}</p>
+        <h4 className="time-stamp">
+          {new Date(message.timestamp?.toDate()).toUTCString()}
+        </h4>
+      </div>)
+      })}
+     
+       {/* <div className = "message receiver">
         <h4 className="name">John watts</h4>
         <p>sending a message</p>
         <h4 className="time-stamp"> 3:30pm</h4>
-      </div>
-       <div className = "message receiver">
-        <h4 className="name">John watts</h4>
-        <p>sending a message</p>
-        <h4 className="time-stamp"> 3:30pm</h4>
-      </div>
+      </div> */}
     </div>
     <div className="chat-footer">
       <InsertEmoticon/>

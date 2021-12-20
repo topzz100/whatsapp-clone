@@ -10,24 +10,29 @@ import db from '../firebase.js'
 
 import './SideBar.css';
 import { SearchOutlined } from '@mui/icons-material';
+import { useStateValue } from './AppProvider';
 
 
 const SideBar = () => {
   const [rooms, setRooms] = useState([])
+  const [{user}, dispatch] = useStateValue()
 
   useEffect(() => {
-    db.collection('rooms').onSnapshot(snapshot =>{
+    const unsubscribe = db.collection('rooms').onSnapshot(snapshot =>{
       setRooms(snapshot.docs.map(doc => ({ 
         id: doc.id,
         data: doc.data()
       })))
     })
+    return () => {
+      unsubscribe();
+    }
   }, [])
 
   return (
     <div className = "sideBar">
       <div className = "sideBarHeader">
-        <Avatar/>
+        <Avatar src ={user?.photoURL}/>
         <div className = "sideBarHeaderRight">
           <IconButton>
             <DonutLargeIcon/>

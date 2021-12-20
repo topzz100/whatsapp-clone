@@ -8,13 +8,14 @@ import {
 } from "react-router-dom";
 import { useState } from 'react';
 import Login from './components/Login';
+import {useStateValue} from './components/AppProvider'
 
 function App() {
-  const[user, setUser] = useState(null)
+  const[{user}, dispatch] = useStateValue()
 
   return (
     <Router>
-    
+     
       <div className="App">
         {!user ? (
           <Login/>
